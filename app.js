@@ -1,4 +1,4 @@
-import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.2';
 import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.mjs';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
