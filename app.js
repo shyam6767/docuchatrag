@@ -176,3 +176,34 @@ questionInput.addEventListener('keydown', (e) => {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 loadModel();
+
+try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: prompt }]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+    console.log('Gemini response:', JSON.stringify(data));
+
+    if (!data.candidates || !data.candidates[0]) {
+      return res.status(500).json({ error: 'No candidates in Gemini response', raw: data });
+    }
+
+    const answer = data.candidates[0].content.parts[0].text;
+    return res.status(200).json({ answer });
+
+  } catch (error) {
+    console.error('Gemini API error:', error);
+    return res.status(500).json({ error: error.message });
+  }
