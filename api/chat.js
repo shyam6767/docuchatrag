@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -16,7 +15,6 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Gemini API key not configured' });
   }
 
-  // Build the prompt
   const prompt = `You are a helpful assistant. Answer the question using ONLY the context provided below. 
 If the answer is not in the context, say "I couldn't find that in the document."
 
@@ -44,14 +42,17 @@ Answer:`;
     );
 
     const data = await response.json();
+    console.log('Gemini response:', JSON.stringify(data));
 
-    // Extract the answer from Gemini's response structure
+    if (!data.candidates || !data.candidates[0]) {
+      return res.status(500).json({ error: 'No candidates in Gemini response', raw: data });
+    }
+
     const answer = data.candidates[0].content.parts[0].text;
-
     return res.status(200).json({ answer });
 
   } catch (error) {
     console.error('Gemini API error:', error);
-    return res.status(500).json({ error: 'Something went wrong calling Gemini.' });
+    return res.status(500).json({ error: error.message });
   }
 }
