@@ -15,8 +15,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Gemini API key not configured' });
   }
 
-  const prompt = `You are a helpful assistant. Answer the question using ONLY the context provided below. 
-If the answer is not in the context, say "I couldn't find that in the document."
+  const prompt = `You are a helpful assistant. Answer the question using ONLY the context provided below. If the answer is not in the context, say "I could not find that in the document."
 
 Context:
 ${context}
@@ -27,7 +26,7 @@ Answer:`;
 
   try {
     const response = await fetch(
-      ``https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,17 +41,15 @@ Answer:`;
     );
 
     const data = await response.json();
-    console.log('Gemini response:', JSON.stringify(data));
 
     if (!data.candidates || !data.candidates[0]) {
-      return res.status(500).json({ error: 'No candidates in Gemini response', raw: data });
+      return res.status(500).json({ error: 'Gemini did not return a response', raw: data });
     }
 
     const answer = data.candidates[0].content.parts[0].text;
     return res.status(200).json({ answer });
 
   } catch (error) {
-    console.error('Gemini API error:', error);
     return res.status(500).json({ error: error.message });
   }
 }
