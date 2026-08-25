@@ -1,41 +1,33 @@
-module.exports async function handler(req, res) {
+const handler = async function(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
   const { question, context } = req.body;
 
   if (!question || !context) {
-    return res.status(400).json({ error: 'Missing question or context' });
+    res.status(400).json({ error: 'Missing question or context' });
+    return;
   }
 
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
   if (!GEMINI_API_KEY) {
-    return res.status(500).json({ error: 'Gemini API key not configured' });
+    res.status(500).json({ error: 'Gemini API key not configured' });
+    return;
   }
 
-  const prompt = `You are a helpful assistant. Answer the question using ONLY the context provided below. If the answer is not in the context, say "I could not find that in the document."
-
-Context:
-${context}
-
-Question: ${question}
-
-Answer:`;
+  const prompt = 'You are a helpful assistant. Answer the question using ONLY the context provided below. If the answer is not in the context, say I could not find that in the document.\n\nContext:\n' + context + '\n\nQuestion: ' + question + '\n\nAnswer:';
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: prompt }]
-            }
-          ]
+          contents: [{ parts: [{ text: prompt }] }]
         })
       }
     );
@@ -43,13 +35,16 @@ Answer:`;
     const data = await response.json();
 
     if (!data.candidates || !data.candidates[0]) {
-      return res.status(500).json({ error: 'Gemini did not return a response', raw: data });
+      res.status(500).json({ error: 'No response from Gemini', raw: data });
+      return;
     }
 
     const answer = data.candidates[0].content.parts[0].text;
-    return res.status(200).json({ answer });
+    res.status(200).json({ answer: answer });
 
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
-}
+};
+
+module.exports = handler;

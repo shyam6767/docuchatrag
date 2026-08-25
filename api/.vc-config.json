@@ -1,0 +1,5 @@
+{
+  "runtime": "nodejs20.x",
+  "handler": "chat.js",
+  "launcherType": "Nodejs"
+}
