@@ -33,8 +33,9 @@ export default async function handler(req, res) {
         })
       }
     );
-
+    console.log('GEMINI STATUS:', response.status);
     const data = await response.json();
+    console.log('GEMINI DATA:', JSON.stringify(data).slice(0, 200));
 
     if (!data.candidates || !data.candidates[0]) {
       res.status(500).json({ error: 'No response from Gemini', raw: data });
