@@ -1,4 +1,5 @@
 {
-  "name": "docuchat",
-  "version": "1.0.0"
+  "name": "docuchatrag",
+  "version": "1.0.0",
+  "type": "module"
 }
