@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   }
 
   const prompt = 'You are a helpful assistant. Answer the question using ONLY the context provided below. If the answer is not in the context, say I could not find that in the document.\n\nContext:\n' + context + '\n\nQuestion: ' + question + '\n\nAnswer:';
-
+  console.log('CALLING GEMINI...');
   try {
     const response = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY,
@@ -45,6 +45,8 @@ export default async function handler(req, res) {
     res.status(200).json({ answer: answer });
 
   } catch (error) {
+    console.log('CATCH ERROR:', error.message);
+    console.log('STACK:', error.stack);
     res.status(500).json({ error: error.message });
   }
 }
