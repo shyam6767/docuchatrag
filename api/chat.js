@@ -1,4 +1,6 @@
 export default async function handler(req, res) {
+  console.log('METHOD:', req.method);
+  console.log('BODY:', JSON.stringify(req.body));
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
