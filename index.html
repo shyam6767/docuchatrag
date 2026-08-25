@@ -7,24 +7,19 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-
     <div class="container">
 
-      <!-- LEFT PANEL: Document input -->
       <div class="left-panel">
-        <h2>📄 Your Document</h2>
+        <h2>Document</h2>
         <textarea id="doc-input" placeholder="Paste your document here..."></textarea>
-        <div class="upload-row">
-          <label for="pdf-upload" id="upload-label">📎 Upload PDF instead</label>
-          <input type="file" id="pdf-upload" accept=".pdf" />
-        </div>
+        <label for="pdf-upload" id="upload-label">Upload PDF</label>
+        <input type="file" id="pdf-upload" accept=".pdf" />
         <button id="load-btn">Load Document</button>
         <p id="doc-status"></p>
       </div>
 
-      <!-- RIGHT PANEL: Chat -->
       <div class="right-panel">
-        <h2>💬 Ask Questions</h2>
+        <h2>Ask Questions</h2>
         <div id="chat-box"></div>
         <div class="input-row">
           <input type="text" id="question-input" placeholder="Ask something about your document..." />
@@ -33,9 +28,6 @@
       </div>
 
     </div>
-
-    <!-- Transformers.js loaded from CDN -->
     <script type="module" src="app.js"></script>
-
   </body>
 </html>
